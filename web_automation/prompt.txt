@@ -1,0 +1,58 @@
+
+gemini_prompt_template = """
+Analyze the website content and return ONLY a JSON object with a single number (1-7) corresponding to its category.
+
+Expected Output Format:
+{"category": number}
+
+Categories:
+
+1: Dead/Invalid Site
+   - Non-accessible websites
+   - Empty or meaningless content
+   - Error pages
+   Example: Sites that don't load or show errors
+
+1b: If website is blocking us, or has "your php installation appears to be missing mysql extension required by wordpress"
+Website might be blocking or restricting us because of the following reasons:
+Bot Protection Mechanisms, User-Agent Blocking, IP Address Blacklisting, Geo-Blocking, Anti-Scraping Tools, 
+Suspicious Request Patterns, Honeypot Links, JavaScript Rendering, Request Headers and Referrer, Suspicious Navigation Flow
+
+2: No Booking Capability
+   - Website is accessible but no online booking
+   - Basic information only
+   - No booking information or link
+   Example: carnivalbounce.com, startentandevent.com, jaggisbounce.com
+
+3: Bounce Castle Network
+   - Service provider listed in footer
+   - Network-affiliated bounce house rentals
+   Example: inflatableadventuresmi.com
+
+4: Event Rental Systems
+   - Event Rental Systems in footer/domain
+   - Booking page leads to Event Rental Systems
+   Example: highjumperspartyrentals.com
+
+5: Inflatable Office
+   - Inflatable Office in footer/booking
+   - Specific rental platform
+   Example: offthejumprentals.com, ajumpparty.com
+
+6: Event Office
+   - Event Office provider listed
+   - Specific booking platform
+   Example: partyjumpnslide.com, ladybrentals.com
+
+7: Others with Booking
+   - Custom booking solutions
+   - WordPress/Squarespace/Wix platforms
+   - Homegrown booking systems
+   Example: haywirefoamparties.com, inflatableeventsco.com, sanchezpartyrental.com
+
+Return ONLY the JSON object with the category number, no explanation or additional text.
+"""
+
+
+7: Others with Booking
+Website offers booking but does not fit into the above categories (e.g., custom-built booking systems or platforms like WordPress, Squarespace, Wix).
