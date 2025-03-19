@@ -4,6 +4,7 @@ from getin_data import check_website_status
 from gemeni_speacker import gemini_speaker
 from cms_api import get_cms_info
 from urllib.parse import urlparse, urlunparse
+import pandas as pd
 #from key_match import key_map_and_gemini  # Uncomment if needed
 
 def analyze_website(website: dict) -> dict:
@@ -90,29 +91,57 @@ def normalize_url(url):
     return urlunparse(normalized_url)
 
 if __name__ == "__main__":
-    input_file = "extracted_urls2.txt"
+    input_file = './sample_2000.csv'
     
     if not os.path.isfile(input_file):
         print(f"Input file '{input_file}' not found!")
         exit(1)
 
     # Read URLs from file, normalize them, and store in list
-    urls = []
-    with open(input_file, "r", encoding="utf-8") as f: 
-        for line in f:
-            url_line = line.strip()
-            if url_line:
-                normalized_url = normalize_url(url_line)
-                urls.append({"url": normalized_url})
+#     urls = ["http://www.pjbouncehouse.com/",
+# "http://www.thomasfamilyentertainment.com/",
+# "https://www.ladybugsadventures.com/",
+# "https://www.njbouncehouserentals.com/",
+# "https://bouncebrothersnea.com/",
+# "https://brightbooths.com/",
+# "https://backyardbashrental.com/",
+# "https://bouncealottexarkana.com/",]
 
-    print(f"Found {len(urls)} URLs in '{input_file}'. Processing...")
+#     urls = [{"url": url} for url in urls]
+
+    # with open(input_file, "r", encoding="utf-8") as f: 
+    #     for line in f:
+    #         url_line = line.strip()
+    #         if url_line:
+    #             normalized_url = normalize_url(url_line)
+    #             urls.append({"url": normalized_url})
+    urls = []
+    df = pd.read_csv(input_file)
+    for site in df['site']:
+        if site:
+            normalized_url = normalize_url(site)
+            urls.append({"url": normalized_url})
+
+    start = 0
+    end = len(urls)
+
+    # with open(input_file, "r") as f:
+    #     # read csv
+    #     for line in f:
+    #         # split csv
+    #         site = line.strip().split(',')[2]
+    #         if site:
+    #             normalized_url = normalize_url(site)
+    #             urls.append({"url": normalized_url})
+
+    print(f"Found {len(urls[start:end])} URLs in '{input_file}'. Processing...")
 
     # If you have a process_urls function, call it here. (Replace with your function)
-    results = process_urls(urls)
+    results = process_urls(urls[start:end])
     # results = urls  # Placeholder to print normalized URLs
     print(results)
     # Write the results to a JSON file.
-    output_file = "results_from_extracted_urls.json"
+    output_file = "results_from_extracted_urls_new.json"
     with open(output_file, "w", encoding="utf-8") as json_file:
         json.dump(results, json_file, indent=4)
     
