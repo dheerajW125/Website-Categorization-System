@@ -7,38 +7,49 @@ gemini_prompt_template = """Analyze the website content and return ONLY a JSON o
 Expected Output Format:
 {"category": number}
 
-Categories:
-1: Down (No Website or Not Working)
-Website is not accessible, returns an error, or leads to a non-website (e.g., a Facebook page).
+### **Categories:**  
 
-1b: If website is blocking us, or has "your php installation appears to be missing mysql extension required by wordpress"
-Website might be blocking or restricting us because of the following reasons:
-Bot Protection Mechanisms, User-Agent Blocking, IP Address Blacklisting, Geo-Blocking, Anti-Scraping Tools, 
-Suspicious Request Patterns, Honeypot Links, JavaScript Rendering, Request Headers and Referrer, Suspicious Navigation Flow
+#### **1: Down (No Website or Not Working)**  
+The website is inaccessible, returns an error, or redirects to a non-website (e.g., a Facebook page).  
 
-2: No Booking Capability
-Website is accessible but does not offer online booking for bounce houses.
+#### **1b: Blocked or PHP/MySQL Error**  
+The website may be blocking access or displaying errors like *"Your PHP installation appears to be missing the MySQL extension required by WordPress."*  
+Possible reasons:  
+- Bot protection  
+- IP/User-agent blocking  
+- Geo-restrictions  
+- Anti-scraping tools  
+- JavaScript-based validation  
 
-3: Bounce Castle Network
-Website is affiliated with a bounce castle network, usually listed in the footer.
+#### **2: No Booking Capability**  
+The website is accessible but does not support online booking for bounce houses.  
 
+#### **3: Bounce Castle Network**  
+The website is part of a bounce castle network, typically mentioned in the footer.  
 
-4: Event Rental Systems
-"Event Rental Systems" is mentioned in the footer or appears when clicking "Book."
+#### **4: Event Rental Systems**  
+"Event Rental Systems" appears in the footer or after clicking "Book."  
 
-5: Inflatable Office
-"Inflatable Office" is mentioned in the footer or appears after clicking "Book."
+#### **5: Inflatable Office**  
+"Inflatable Office" is mentioned in the footer, on the booking page, or within the website's inflatable services section.  
 
-6: Event Office
-"Event Office" is mentioned in the footer or appears on the booking page.
+#### **6: Event Office**  
+"Event Office" is mentioned in the footer, on the booking page, or in references to event organization.  
 
+---
 
-Assign Category 7 ("Others with Booking") if:
-A booking link, button, or similar element labeled "Book Now" (or equivalent) is detected on the page, and
-There are no nearby indicators that the booking action is a call-to-action for contacting the business (such as prompts to "Contact Us," "Schedule a Discovery Call with Us!", "Schedule a Call," "Email/Email Us," or the display of a contact number).
+### **Category Assignment Rules:**  
 
-Assign Category 2 ("No Booking Available") if:
-Near the "Book Now" element you find any keywords or phrases that suggest the primary action is to get in touch rather than to book online (e.g., "Contact Us," "Schedule a Discovery Call with Us!", "Schedule a Call," "Email/Email Us," or any contact number is shown).
+#### **Category 7 ("Others with Booking")**  
+Assign if:  
+- A booking link/button (e.g., *"Book Now"*) is detected.  
+- No indicators suggest it's a contact prompt (e.g., "Contact Us," "Schedule a Call," "Email Us," or a visible phone number).  
+
+#### **Category 2 ("No Booking Capability")**  
+Assign if:  
+- A *"Book Now"* button is present but leads to a contact request instead of direct booking.  
+
+---
 
 Return ONLY the JSON object with the category number, no explanation or additional text.
 """
