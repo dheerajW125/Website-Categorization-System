@@ -146,16 +146,17 @@ def check_website_status(url: str, cms_info: str) -> Dict[str, Union[bool, str, 
     except Exception as e:
         print(f"Requests failed, trying Selenium: {url} - {e}")
 
-        # Step 2: Fallback to Selenium
-        selenium_success, page_content = get_selenium_content(url)
-        if selenium_success and has_valid_body(page_content):
+        # Step 2: Fallback to Proxy
+        print("Trying Bright Data Proxy...")
+        page_content = proxy_request(url)
+        if page_content and has_valid_body(page_content):
             result['is_live'] = True
         else:
-            print(f"Selenium failed, trying Proxy: {url}")
+            print(f"Proxy failed, trying Selenium: {url}")
 
-            # Step 3: Fallback to Proxy
-            page_content = proxy_request(url)
-            if page_content and has_valid_body(page_content):
+            # Step 3: Fallback to Selenium
+            selenium_success, page_content = get_selenium_content(url)
+            if selenium_success and has_valid_body(page_content):
                 result['is_live'] = True
             else:
                 result['error'] = "All methods failed to retrieve valid content."
@@ -170,6 +171,9 @@ def check_website_status(url: str, cms_info: str) -> Dict[str, Union[bool, str, 
 
             markdown_text = md(str(soup))
             result['markdown_text'] = markdown_text
+            
+            if "bouncycastle" in soup.get_text().lower():
+                print("Bouncycastle found in the content")
 
             # Example keyword search
             booking_keywords = ["book", "reservation", "availability"]

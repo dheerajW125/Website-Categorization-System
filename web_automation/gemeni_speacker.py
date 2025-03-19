@@ -33,8 +33,6 @@ Website is affiliated with a bounce castle network, usually listed in the footer
 "Event Office" is mentioned in the footer or appears on the booking page.
 
 
-
-
 Assign Category 7 ("Others with Booking") if:
 A booking link, button, or similar element labeled "Book Now" (or equivalent) is detected on the page, and
 There are no nearby indicators that the booking action is a call-to-action for contacting the business (such as prompts to "Contact Us," "Schedule a Discovery Call with Us!", "Schedule a Call," "Email/Email Us," or the display of a contact number).
@@ -62,7 +60,7 @@ Content:
 {text}
 """
     
-    genai.configure(api_key="AIzaSyArLlES21FgERfUYvj97s-83trvQ5JZjcs")
+    genai.configure(api_key="AIzaSyCOOQgr1r1OqumdA5MFAv8cuseQOmRLS0Q")
 
     generation_config = {
         "temperature": 0.7,
