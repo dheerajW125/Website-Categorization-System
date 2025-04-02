@@ -14,4 +14,6 @@ supabase
 python-dotenv
 langchain-groq
 crawl4ai
-langchain 
+langchain
+google-generativeai
+json5

@@ -234,10 +234,12 @@ if __name__ == "__main__":
         
         if to_process:
             try:
+                print("Processing instance in the loop:", url.strip())
                 site_data = asyncio.run(main(normalize_url(url.strip())))
                 # print("All reviews saved:", site_data)
                 if site_data:
                     site_data[0]["url"] = url.strip()
+                    print(site_data)
                     all_url.extend(site_data)
                 else:
                     all_url.append({"url": url.strip(), "category": 1})

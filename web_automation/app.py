@@ -32,6 +32,8 @@ def analyze_website(website: dict) -> dict:
     try:
         markdown_text = status_result.get('markdown_text', '')
         if markdown_text:
+            # with open(website["url"].replace(".","-"+".md"), "w", encoding="utf-8") as f:
+            #     f.write(markdown_text)
             # You can add a keyword-matching step here before deferring to gemini_speaker
             # For now, we directly call gemini_speaker.
             category_result = gemini_speaker(markdown_text, website["cms_info"])
@@ -42,7 +44,7 @@ def analyze_website(website: dict) -> dict:
         print(f"Error in gemini_speaker for {website['url']}: {e}")
         return {"category": 1}
 
-def process_urls(urls: list) -> list:
+def process_urls(urls: list, batch: int) -> list:
     """
     Processes a list of website dictionaries, analyzing each and recording its category.
     
@@ -53,6 +55,7 @@ def process_urls(urls: list) -> list:
         list: A list of dictionaries containing the URL and its computed category.
     """
     results = []
+    i = 1
     for website in urls:
         try:
             category = analyze_website(website)
@@ -66,6 +69,13 @@ def process_urls(urls: list) -> list:
                 "url": website.get("url", ""),
                 "category": 1  # Fallback category for errors
             })
+        if i%50 == 0:
+            output_dir = "batch_{}".format(batch)
+            os.makedirs(output_dir, exist_ok=True)
+            output_file = "{}/run_{}.json".format(output_dir,i)
+            with open(output_file, "w", encoding="utf-8") as json_file:
+                json.dump(results, json_file, indent=4)
+        i+=1
     return results
 
 
@@ -91,7 +101,7 @@ def normalize_url(url):
     return urlunparse(normalized_url)
 
 if __name__ == "__main__":
-    input_file = './sample_2000.csv'
+    input_file = './new_sites.csv'
     
     if not os.path.isfile(input_file):
         print(f"Input file '{input_file}' not found!")
@@ -122,26 +132,18 @@ if __name__ == "__main__":
             normalized_url = normalize_url(site)
             urls.append({"url": normalized_url})
 
+    batch = 1
     start = 0
-    end = len(urls)
-
-    # with open(input_file, "r") as f:
-    #     # read csv
-    #     for line in f:
-    #         # split csv
-    #         site = line.strip().split(',')[2]
-    #         if site:
-    #             normalized_url = normalize_url(site)
-    #             urls.append({"url": normalized_url})
+    end = 10
 
     print(f"Found {len(urls[start:end])} URLs in '{input_file}'. Processing...")
 
     # If you have a process_urls function, call it here. (Replace with your function)
-    results = process_urls(urls[start:end])
+    results = process_urls(urls[start:end], batch=batch)
     # results = urls  # Placeholder to print normalized URLs
     print(results)
     # Write the results to a JSON file.
-    output_file = "results_from_extracted_urls_new.json"
+    output_file = "Final_Results_From_URLS_Batch_{}_{}_to_{}.json".format(batch, start, end)
     with open(output_file, "w", encoding="utf-8") as json_file:
         json.dump(results, json_file, indent=4)
     
